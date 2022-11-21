@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Buyer
 from django.core.mail import send_mail
 import random
@@ -6,12 +6,15 @@ from django.conf import settings
 # Create your views here.
 
 def index(request):
+    try:
+        user_object = Buyer.objects.get(email = request.session['email'])
+        return render(request, 'index.html', {'user_object': user_object})
+    except:
+        return render(request, 'index.html')
     
-    return render(request, 'index.html')
-    
+#DRY : Don't Repeat Yourself
 
 def about(request):
-    
     return render(request, 'about.html')
 
 def register(request):
@@ -67,11 +70,17 @@ def login(request):
             session_user = Buyer.objects.get(email = request.POST['email'])
             if request.POST['password'] == session_user.password:
                 request.session['email'] = session_user.email
-                return render(request, 'index.html')
+                return redirect('index')
             else:
                 return render(request, 'login.html', {'message': 'Wrong Password!!'})
         except:
             return render(request, 'login.html', {'message': 'User with this Email does not exist.'})
 
         
-    
+def logout(request):
+    del request.session['email']
+    return redirect('index')
+
+def edit_profile(request):
+    user_object = Buyer.objects.get(email = request.session['email'])
+    return render(request, 'edit_profile.html', {'user_object': user_object})

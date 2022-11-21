@@ -60,19 +60,35 @@
 						</li>
 						<li class="text-center border-right text-white">
 							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white">
-								<i class="fas fa-truck mr-2"></i>Track Order</a>
+								<i class="fas fa-truck mr-2"></i>Your Orders</a>
 						</li>
+						
+						{% if user_object %}
+
 						<li class="text-center border-right text-white">
-							<i class="fas fa-phone mr-2"></i> 001 234 5678
+							<a href="{% url 'logout' %}" onclick="f1()" class="text-white">
+								<i class="fas fa-sign-out-alt mr-2"></i> LogOut </a>
 						</li>
+						
+						<li class="text-center text-white">
+							<a href="{% url 'edit_profile' %}" class="text-white">
+								<img class="img-profile rounded-circle" style="height: 30px; width: 30px;"
+								 src="{{user_object.pic.url}}">  {{user_object.first_name}} {{user_object.last_name}}</a>
+						</li>
+						
+						{% else %}
+
 						<li class="text-center border-right text-white">
-							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white">
+							<a href="{% url 'login' %}"  class="text-white">
 								<i class="fas fa-sign-in-alt mr-2"></i> Log In </a>
 						</li>
 						<li class="text-center text-white">
-							<a href="#" data-toggle="modal" data-target="#exampleModal2" class="text-white">
+							<a href="{% url 'register' %}" class="text-white">
 								<i class="fas fa-sign-out-alt mr-2"></i>Register </a>
 						</li>
+
+						{% endif %}
+
 					</ul>
 					<!-- //header lists -->
 				</div>
@@ -2012,6 +2028,11 @@
 	</script>
 	<!-- //popup modal (for location)-->
 
+	<script>
+		function f1(){
+			alert('Are You Sure??')
+		}
+	</script>
 	<!-- cart-js -->
 	<script src="{% static 'js/minicart.js' %}"></script>
 	<script>
