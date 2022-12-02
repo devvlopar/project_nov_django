@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect
-from .models import Buyer
+from .models import Buyer, Cart
+from seller.models import Product
 from django.core.mail import send_mail
 import random
 from django.conf import settings
 # Create your views here.
 
 def index(request):
+    all_products = Product.objects.all()
     try:
         user_object = Buyer.objects.get(email = request.session['email'])
-        return render(request, 'index.html', {'user_object': user_object})
+        return render(request, 'index.html', {'user_object': user_object, 'all_products' : all_products})
     except:
-        return render(request, 'index.html')
+        return render(request, 'index.html',{'all_products' : all_products})
     
 #DRY : Don't Repeat Yourself
 
@@ -84,3 +86,18 @@ def logout(request):
 def edit_profile(request):
     user_object = Buyer.objects.get(email = request.session['email'])
     return render(request, 'edit_profile.html', {'user_object': user_object})
+
+
+def add_to_cart(request, pk):
+    try:
+        Cart.objects.create(
+            product = Product.objects.get(id = pk),
+            buyer = Buyer.objects.get(email = request.session['email']),
+            quantity = request.GET[str(pk)]
+        )
+        return redirect('index')
+    except KeyError:
+        return render(request, 'login.html')
+    except:
+        return render(request, '500.html')
+    

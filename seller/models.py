@@ -14,3 +14,15 @@ class Seller(models.Model):
 
     def __str__(self) -> str:
         return self.first_name
+
+
+class Product(models.Model):
+    name = models.CharField(max_length= 30)
+    des = models.CharField(max_length=330)
+    price = models.FloatField(default=0.0)
+    quantity = models.IntegerField(default=0)
+    pic = models.FileField(upload_to= 'products', default='woman.jpg')
+    
+    def __str__(self) -> str:
+        return self.name
+

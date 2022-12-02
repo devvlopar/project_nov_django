@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from . models import Seller
+from . models import Seller, Product
 import random
 from django.conf import settings
 from django.core.mail import send_mail
@@ -84,9 +84,18 @@ def logout(request):
 
 def add_product(request):
     if request.method == 'GET':
-        return render(request, 'add_product.html')
+        seller_object = Seller.objects.get(email= request.session['email'])
+        return render(request, 'add_product.html',{'user_object': seller_object})
     else:
-        pass
+        seller_object = Seller.objects.get(email= request.session['email'])
+        Product.objects.create(
+            name = request.POST['name'],
+            des = request.POST['des'],
+            price = request.POST['price'],
+            quantity = request.POST['quantity'],
+            pic = request.FILES['pic']
+        )
+        return render(request, 'add_product.html', {'message': 'successfully added!!', 'user_object': seller_object})
 
 
 def edit_seller_profile(request):
@@ -108,4 +117,6 @@ def edit_seller_profile(request):
             seller_object.pic = request.FILES['pic']
         seller_object.save()
         return render(request, 'edit_seller_profile.html',{'user_object': seller_object})
+
+
 
