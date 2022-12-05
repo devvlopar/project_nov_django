@@ -80,6 +80,7 @@ def logout(request):
         return render(request, 'seller_login.html')
     except:
         return render(request, 'seller_login.html')
+        
     
 
 def add_product(request):

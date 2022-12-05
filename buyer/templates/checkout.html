@@ -1,9 +1,4 @@
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
+{% load static %}
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -26,15 +21,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- //Meta tag Keywords -->
 
 	<!-- Custom-Files -->
-	<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
 	<!-- Bootstrap css -->
-	<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
 	<!-- Main css -->
-	<link rel="stylesheet" href="css/fontawesome-all.css">
+	<link rel="stylesheet" href="{% static 'css/fontawesome-all.css' %}">
 	<!-- Font-Awesome-Icons-CSS -->
-	<link href="css/popuo-box.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="{% static 'css/popuo-box.css' %}" rel="stylesheet" type="text/css" media="all" />
 	<!-- pop-up-box -->
-	<link href="css/menu.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="{% static 'css/menu.css' %}" rel="stylesheet" type="text/css" media="all" />
 	<!-- menu style -->
 	<!-- //Custom-Files -->
 
@@ -65,25 +60,42 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						</li>
 						<li class="text-center border-right text-white">
 							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white">
-								<i class="fas fa-truck mr-2"></i>Track Order</a>
+								<i class="fas fa-truck mr-2"></i>Your Orders</a>
 						</li>
+						
+						{% if user_object %}
+
 						<li class="text-center border-right text-white">
-							<i class="fas fa-phone mr-2"></i> 001 234 5678
+							<a href="{% url 'logout' %}" onclick="f1()" class="text-white">
+								<i class="fas fa-sign-out-alt mr-2"></i> LogOut </a>
 						</li>
+						
+						<li class="text-center text-white">
+							<a href="{% url 'edit_profile' %}" class="text-white">
+								<img class="img-profile rounded-circle" style="height: 30px; width: 30px;"
+								 src="{{user_object.pic.url}}">  {{user_object.first_name}} {{user_object.last_name}}</a>
+						</li>
+						
+						{% else %}
+
 						<li class="text-center border-right text-white">
-							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white">
+							<a href="{% url 'login' %}"  class="text-white">
 								<i class="fas fa-sign-in-alt mr-2"></i> Log In </a>
 						</li>
 						<li class="text-center text-white">
-							<a href="#" data-toggle="modal" data-target="#exampleModal2" class="text-white">
+							<a href="{% url 'register' %}" class="text-white">
 								<i class="fas fa-sign-out-alt mr-2"></i>Register </a>
 						</li>
+
+						{% endif %}
+
 					</ul>
 					<!-- //header lists -->
 				</div>
 			</div>
 		</div>
 	</div>
+
 
 	<!-- Button trigger modal(select-location) -->
 	<div id="small-dialog1" class="mfp-hide">
@@ -556,7 +568,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				<div class="col-md-3 logo_agile">
 					<h1 class="text-center">
 						<a href="index.html" class="font-weight-bold font-italic">
-							<img src="images/logo2.png" alt=" " class="img-fluid">Electro Store
+							<img src="{% static 'images/logo2.png' %}" alt=" " class="img-fluid">Electro Store
 						</a>
 					</h1>
 				</div>
@@ -826,13 +838,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<!-- //tittle heading -->
 			<div class="checkout-right">
 				<h4 class="mb-sm-4 mb-3">Your shopping cart contains:
-					<span>3 Products</span>
+					<span> {{total_items}} Items</span>
 				</h4>
 				<div class="table-responsive">
+					<form action="{% url 'make_payment' %}" method="POST">
+						{% csrf_token %}
 					<table class="timetable_sub">
 						<thead>
 							<tr>
-								<th>SL No.</th>
+								
 								<th>Product</th>
 								<th>Quality</th>
 								<th>Product Name</th>
@@ -842,136 +856,50 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							</tr>
 						</thead>
 						<tbody>
+							{% for item in cart_products %}
+
 							<tr class="rem1">
-								<td class="invert">1</td>
+								
 								<td class="invert-image">
 									<a href="single.html">
-										<img src="images/a.jpg" alt=" " class="img-responsive">
+										<img src="{{item.product.pic.url}}" alt=" " class="img-responsive">
 									</a>
 								</td>
 								<td class="invert">
 									<div class="quantity">
-										<div class="quantity-select">
-											<div class="entry value-minus">&nbsp;</div>
-											<div class="entry value">
-												<span>1</span>
-											</div>
-											<div class="entry value-plus active">&nbsp;</div>
+										
+												{{item.quantity}}
+											
+											
 										</div>
 									</div>
 								</td>
-								<td class="invert">Back Cover</td>
-								<td class="invert">$259</td>
+								<td class="invert">{{item.product.name}}</td>
+								<td class="invert">${{item.product.price}}</td>
 								<td class="invert">
-									<div class="rem">
-										<div class="close1"> </div>
-									</div>
+									
+										<div> <a href="{% url 'drop_cart_product' item.id %}"> remove</a></div>
+									
 								</td>
 							</tr>
-							<tr class="rem2">
-								<td class="invert">2</td>
-								<td class="invert-image">
-									<a href="single2.html">
-										<img src="images/a4.jpg" alt=" " class="img-responsive">
-									</a>
-								</td>
-								<td class="invert">
-									<div class="quantity">
-										<div class="quantity-select">
-											<div class="entry value-minus">&nbsp;</div>
-											<div class="entry value">
-												<span>1</span>
-											</div>
-											<div class="entry value-plus active">&nbsp;</div>
-										</div>
-									</div>
-								</td>
-								<td class="invert">Cordless Trimmer</td>
-								<td class="invert">$1,999</td>
-								<td class="invert">
-									<div class="rem">
-										<div class="close2"> </div>
-									</div>
-								</td>
-							</tr>
-							<tr class="rem3">
-								<td class="invert">3</td>
-								<td class="invert-image">
-									<a href="single.html">
-										<img src="images/a3.jpg" alt=" " class="img-responsive">
-									</a>
-								</td>
-								<td class="invert">
-									<div class="quantity">
-										<div class="quantity-select">
-											<div class="entry value-minus">&nbsp;</div>
-											<div class="entry value">
-												<span>1</span>
-											</div>
-											<div class="entry value-plus active">&nbsp;</div>
-										</div>
-									</div>
-								</td>
-								<td class="invert">Nikon Camera</td>
-								<td class="invert">$37,490</td>
-								<td class="invert">
-									<div class="rem">
-										<div class="close3"> </div>
-									</div>
-								</td>
-							</tr>
+							
+							{% endfor %}
 						</tbody>
 					</table>
-				</div>
-			</div>
-			<div class="checkout-left">
-				<div class="address_form_agile mt-sm-5 mt-4">
-					<h4 class="mb-sm-4 mb-3">Add a new Details</h4>
-					<form action="payment.html" method="post" class="creditly-card-form agileinfo_form">
-						<div class="creditly-wrapper wthree, w3_agileits_wrapper">
-							<div class="information-wrapper">
-								<div class="first-row">
-									<div class="controls form-group">
-										<input class="billing-address-name form-control" type="text" name="name" placeholder="Full Name" required="">
-									</div>
-									<div class="w3_agileits_card_number_grids">
-										<div class="w3_agileits_card_number_grid_left form-group">
-											<div class="controls">
-												<input type="text" class="form-control" placeholder="Mobile Number" name="number" required="">
-											</div>
-										</div>
-										<div class="w3_agileits_card_number_grid_right form-group">
-											<div class="controls">
-												<input type="text" class="form-control" placeholder="Landmark" name="landmark" required="">
-											</div>
-										</div>
-									</div>
-									<div class="controls form-group">
-										<input type="text" class="form-control" placeholder="Town/City" name="city" required="">
-									</div>
-									<div class="controls form-group">
-										<select class="option-w3ls">
-											<option>Select Address type</option>
-											<option>Office</option>
-											<option>Home</option>
-											<option>Commercial</option>
-
-										</select>
-									</div>
-								</div>
-								<button class="submit check_out btn">Delivery to this Address</button>
-							</div>
-						</div>
-					</form>
-					<div class="checkout-right-basket">
-						<a href="payment.html">Make a Payment
+					<div class="checkout-right-basket" style="text-align:center;">
+						<button type="submit">
+						<a>Make a Payment
 							<span class="far fa-hand-point-right"></span>
 						</a>
+					</button>
 					</div>
+				</form>
 				</div>
 			</div>
+			
 		</div>
 	</div>
+	
 	<!-- //checkout page -->
 
 	<!-- middle section -->
@@ -987,7 +915,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<p>Sale up to 25% off all in store</p>
 							</div>
 							<div class="col-sm-5 offerimg-w3l">
-								<img src="images/off1.png" alt="" class="img-fluid">
+								<img src="{% static 'images/off1.png' %}" alt="" class="img-fluid">
 							</div>
 						</div>
 					</div>
@@ -1001,7 +929,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<p>Free shipping order over $100</p>
 							</div>
 							<div class="col-sm-5 offerimg-w3l">
-								<img src="images/off2.png" alt="" class="img-fluid">
+								<img src="{% static 'images/off2.png' %}" alt="" class="img-fluid">
 							</div>
 						</div>
 					</div>
@@ -1389,31 +1317,31 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<h5 class="font-weight-bold mb-3">Payment Method</h5>
 					<ul>
 						<li>
-							<img src="images/pay2.png" alt="">
+							<img src="{% static 'images/pay2.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay5.png" alt="">
+							<img src="{% static 'images/pay5.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay1.png" alt="">
+							<img src="{% static 'images/pay1.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay4.png" alt="">
+							<img src="{% static 'images/pay4.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay6.png" alt="">
+							<img src="{% static 'images/pay6.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay3.png" alt="">
+							<img src="{% static 'images/pay3.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay7.png" alt="">
+							<img src="{% static 'images/pay7.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay8.png" alt="">
+							<img src="{% static 'images/pay8.png' %}" alt="">
 						</li>
 						<li>
-							<img src="images/pay9.png" alt="">
+							<img src="{% static 'images/pay9.png' %}" alt="">
 						</li>
 					</ul>
 				</div>
@@ -1435,7 +1363,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 	<!-- js-files -->
 	<!-- jquery -->
-	<script src="js/jquery-2.2.3.min.js"></script>
+	<script src="{% static 'js/jquery-2.2.3.min.js' %}"></script>
 	<!-- //jquery -->
 
 	<!-- nav smooth scroll -->
@@ -1456,7 +1384,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- //nav smooth scroll -->
 
 	<!-- popup modal (for location)-->
-	<script src="js/jquery.magnific-popup.js"></script>
+	<script src="{% static 'js/jquery.magnific-popup.js' %}"></script>
 	<script>
 		$(document).ready(function () {
 			$('.popup-with-zoom-anim').magnificPopup({
@@ -1476,7 +1404,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- //popup modal (for location)-->
 
 	<!-- cart-js -->
-	<script src="js/minicart.js"></script>
+	<script src="{% static 'js/minicart.js' %}"></script>
 	<script>
 		paypals.minicarts.render(); //use only unique class names other than paypals.minicarts.Also Replace same class name in css and minicart.min.js
 
@@ -1563,12 +1491,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- //quantity -->
 
 	<!-- smoothscroll -->
-	<script src="js/SmoothScroll.min.js"></script>
+	<script src="{% static 'js/SmoothScroll.min.js' %}"></script>
 	<!-- //smoothscroll -->
 
 	<!-- start-smooth-scrolling -->
-	<script src="js/move-top.js"></script>
-	<script src="js/easing.js"></script>
+	<script src="{% static 'js/move-top.js' %}"></script>
+	<script src="{% static 'js/easing.js' %}"></script>
 	<script>
 		jQuery(document).ready(function ($) {
 			$(".scroll").click(function (event) {
@@ -1602,7 +1530,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- //smooth-scrolling-of-move-up -->
 
 	<!-- for bootstrap working -->
-	<script src="js/bootstrap.js"></script>
+	<script src="{% static 'js/bootstrap.js' %}"></script>
 	<!-- //for bootstrap working -->
 	<!-- //js-files -->
 

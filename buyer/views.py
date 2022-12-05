@@ -1,9 +1,11 @@
+from django.core.mail  import send_mail
 from django.shortcuts import render, redirect
 from .models import Buyer, Cart
 from seller.models import Product
 from django.core.mail import send_mail
 import random
 from django.conf import settings
+from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
@@ -101,3 +103,24 @@ def add_to_cart(request, pk):
     except:
         return render(request, '500.html')
     
+
+def checkout(request):
+    user_object = Buyer.objects.get(email = request.session['email'])
+    cart_products = Cart.objects.filter(buyer = user_object)
+    return render(request, 'checkout.html',{'user_object': user_object, 'cart_products': cart_products, 'total_items': len(cart_products)})
+
+def make_payment(request):
+    user_object = Buyer.objects.get(email = request.session['email'])
+    cart_products = Cart.objects.filter(buyer = user_object)
+    total_price = 0
+    for item in cart_products:
+        total_price += item.product.price * item.quantity
+
+    return render(request, 'payment.html', {'cart_products': cart_products , 'total_price' : total_price} )
+
+def drop_cart_product(request, pk):
+    del_object = Cart.objects.get(id = pk)
+    del_object.delete()
+    user_object = Buyer.objects.get(email = request.session['email'])
+    cart_products = Cart.objects.filter(buyer = user_object)
+    return render(request, 'checkout.html', {'cart_products': cart_products, 'total_items': len(cart_products), 'user_object': user_object})
