@@ -3,7 +3,7 @@
 <html lang="zxx">
 
 <head>
-	<title>Electro Store Ecommerce Category Bootstrap Responsive Web Template | Checkout :: w3layouts</title>
+	<title>Electro Store Ecommerce Category Bootstrap Responsive Web Template | Payment :: w3layouts</title>
 	<!-- Meta tag Keywords -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8" />
@@ -60,42 +60,25 @@
 						</li>
 						<li class="text-center border-right text-white">
 							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white">
-								<i class="fas fa-truck mr-2"></i>Your Orders</a>
+								<i class="fas fa-truck mr-2"></i>Track Order</a>
 						</li>
-						
-						{% if user_object %}
-
 						<li class="text-center border-right text-white">
-							<a href="{% url 'logout' %}" onclick="f1()" class="text-white">
-								<i class="fas fa-sign-out-alt mr-2"></i> LogOut </a>
+							<i class="fas fa-phone mr-2"></i> 001 234 5678
 						</li>
-						
-						<li class="text-center text-white">
-							<a href="{% url 'edit_profile' %}" class="text-white">
-								<img class="img-profile rounded-circle" style="height: 30px; width: 30px;"
-								 src="{{user_object.pic.url}}">  {{user_object.first_name}} {{user_object.last_name}}</a>
-						</li>
-						
-						{% else %}
-
 						<li class="text-center border-right text-white">
-							<a href="{% url 'login' %}"  class="text-white">
+							<a href="#" data-toggle="modal" data-target="#exampleModal" class="text-white">
 								<i class="fas fa-sign-in-alt mr-2"></i> Log In </a>
 						</li>
 						<li class="text-center text-white">
-							<a href="{% url 'register' %}" class="text-white">
+							<a href="#" data-toggle="modal" data-target="#exampleModal2" class="text-white">
 								<i class="fas fa-sign-out-alt mr-2"></i>Register </a>
 						</li>
-
-						{% endif %}
-
 					</ul>
 					<!-- //header lists -->
 				</div>
 			</div>
 		</div>
 	</div>
-
 
 	<!-- Button trigger modal(select-location) -->
 	<div id="small-dialog1" class="mfp-hide">
@@ -794,8 +777,8 @@
 								<a class="dropdown-item" href="single.html">Single Product 1</a>
 								<a class="dropdown-item" href="single2.html">Single Product 2</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item active" href="checkout.html">Checkout Page</a>
-								<a class="dropdown-item" href="payment.html">Payment Page</a>
+								<a class="dropdown-item" href="checkout.html">Checkout Page</a>
+								<a class="dropdown-item active" href="payment.html">Payment Page</a>
 							</div>
 						</li>
 						<li class="nav-item">
@@ -822,85 +805,23 @@
 						<a href="index.html">Home</a>
 						<i>|</i>
 					</li>
-					<li>Checkout</li>
+					<li>Payment Page</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<!-- //page -->
-	<!-- checkout page -->
+	<!-- payment page-->
 	<div class="privacy py-sm-5 py-4">
 		<div class="container py-xl-4 py-lg-2">
 			<!-- tittle heading -->
 			<h3 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-3">
-				<span>C</span>heckout
-			</h3>
+				<span>P</span>ayment</h3>
 			<!-- //tittle heading -->
-			<div class="checkout-right">
-				<h4 class="mb-sm-4 mb-3">Your shopping cart contains:
-					<span> {{total_items}} Items</span>
-				</h4>
-				<div class="table-responsive">
-					<form action="{% url 'make_payment' %}" method="POST">
-						{% csrf_token %}
-					<table class="timetable_sub">
-						<thead>
-							<tr>
-								
-								<th>Product</th>
-								<th>Quality</th>
-								<th>Product Name</th>
-
-								<th>Price</th>
-								<th>Remove</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for item in cart_products %}
-
-							<tr class="rem1">
-								
-								<td class="invert-image">
-									<a href="single.html">
-										<img src="{{item.product.pic.url}}" alt=" " class="img-responsive">
-									</a>
-								</td>
-								<td class="invert">
-									<div class="quantity">
-										<input name="{{item.id}}" type="number" value="{{item.quantity}}" >
-												
-											
-											
-										</div>
-									</div>
-								</td>
-								<td class="invert">{{item.product.name}}</td>
-								<td class="invert">${{item.product.price}}</td>
-								<td class="invert">
-									
-										<div> <a href="{% url 'drop_cart_product' item.id %}"> remove</a></div>
-									
-								</td>
-							</tr>
-							
-							{% endfor %}
-						</tbody>
-					</table>
-					<div class="checkout-right-basket" style="text-align:center;">
-						<button type="submit">
-						<a>Make a Payment
-							<span class="far fa-hand-point-right"></span>
-						</a>
-					</button>
-					</div>
-				</form>
-				</div>
-			</div>
 			
 		</div>
 	</div>
-	
-	<!-- //checkout page -->
+	<!-- //payment page -->
 
 	<!-- middle section -->
 	<div class="join-w3l1 py-sm-5 py-4">
@@ -1446,49 +1367,76 @@
 	</script>
 	<!-- //password-script -->
 
-	<!-- quantity -->
-	<script>
-		$('.value-plus').on('click', function () {
-			var divUpd = $(this).parent().find('.value'),
-				newVal = parseInt(divUpd.text(), 10) + 1;
-			divUpd.text(newVal);
-		});
+	<!-- easy-responsive-tabs -->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/easy-responsive-tabs.css' %}" />
+	<script src="{% static 'js/easyResponsiveTabs.js' %}"></script>
 
-		$('.value-minus').on('click', function () {
-			var divUpd = $(this).parent().find('.value'),
-				newVal = parseInt(divUpd.text(), 10) - 1;
-			if (newVal >= 1) divUpd.text(newVal);
-		});
-	</script>
-	<!--quantity-->
 	<script>
-		$(document).ready(function (c) {
-			$('.close1').on('click', function (c) {
-				$('.rem1').fadeOut('slow', function (c) {
-					$('.rem1').remove();
-				});
+		$(document).ready(function () {
+			//Horizontal Tab
+			$('#parentHorizontalTab').easyResponsiveTabs({
+				type: 'default', //Types: default, vertical, accordion
+				width: 'auto', //auto or any width like 600px
+				fit: true, // 100% fit in a container
+				tabidentify: 'hor_1', // The tab groups identifier
+				activate: function (event) { // Callback function if tab is switched
+					var $tab = $(this);
+					var $info = $('#nested-tabInfo');
+					var $name = $('span', $info);
+					$name.text($tab.text());
+					$info.show();
+				}
 			});
 		});
 	</script>
+	<!-- //easy-responsive-tabs -->
+
+	<!-- credit-card -->
+	<script src="{% static 'js/creditly.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/creditly.css' %}" type="text/css" media="all" />
 	<script>
-		$(document).ready(function (c) {
-			$('.close2').on('click', function (c) {
-				$('.rem2').fadeOut('slow', function (c) {
-					$('.rem2').remove();
-				});
+		$(function () {
+			var creditly = Creditly.initialize(
+				'.creditly-wrapper .expiration-month-and-year',
+				'.creditly-wrapper .credit-card-number',
+				'.creditly-wrapper .security-code',
+				'.creditly-wrapper .card-type');
+
+
+			$(".creditly-card-form .submit").click(function (e) {
+				e.preventDefault();
+				var output = creditly.validate();
+				if (output) {
+					// Your validated credit card output
+					console.log(output);
+				}
 			});
 		});
 	</script>
+
+	<!-- creditly2 (for paypal) -->
+	<script src="{% static 'js/creditly2.js' %}"></script>
 	<script>
-		$(document).ready(function (c) {
-			$('.close3').on('click', function (c) {
-				$('.rem3').fadeOut('slow', function (c) {
-					$('.rem3').remove();
-				});
+		$(function () {
+			var creditly = Creditly2.initialize(
+				'.creditly-wrapper .expiration-month-and-year-2',
+				'.creditly-wrapper .credit-card-number-2',
+				'.creditly-wrapper .security-code-2',
+				'.creditly-wrapper .card-type');
+
+			$(".creditly-card-form-2 .submit").click(function (e) {
+				e.preventDefault();
+				var output = creditly.validate();
+				if (output) {
+					// Your validated credit card output
+					console.log(output);
+				}
 			});
 		});
 	</script>
-	<!-- //quantity -->
+
+	<!-- //credit-card -->
+
 
 	<!-- smoothscroll -->
 	<script src="{% static 'js/SmoothScroll.min.js' %}"></script>

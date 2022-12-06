@@ -13,7 +13,6 @@ urlpatterns = [
     path('checkout/', views.checkout, name="checkout"),
     path('make_payment/', views.make_payment, name="make_payment"),
     path('drop_cart_product/<int:pk>', views.drop_cart_product, name="drop_cart_product"),
-
-
+    path('make_payment/paymenthandler/', views.paymenthandler, name='paymenthandler'),
 
 ]
